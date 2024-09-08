@@ -1,4 +1,4 @@
-package com.cbpark.memo.ui.theme
+package com.cbpark.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

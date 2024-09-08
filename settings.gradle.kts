@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Memo"
 include(":app")
- 
+include(":ui")

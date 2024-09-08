@@ -1,26 +1,20 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  alias(libs.plugins.android.application)
+  alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.compose.compiler)
 }
 
 android {
-  namespace = "com.cbpark.memo"
+  namespace = "com.cbpark.ui"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.cbpark.memo"
     minSdk = 28
-    targetSdk = 34
-    versionCode = 1
-    versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    vectorDrawables {
-      useSupportLibrary = true
-    }
+    consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
@@ -41,18 +35,9 @@ android {
       jvmTarget.set(JvmTarget.JVM_17)
     }
   }
-  buildFeatures {
-    compose = true
-  }
-  packaging {
-    resources {
-      excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    }
-  }
 }
 
 dependencies {
-  implementation(project(":ui"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
