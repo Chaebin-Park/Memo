@@ -42,11 +42,20 @@ dependencies {
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
+  implementation(libs.androidx.room.common)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
 
   implementation(libs.symbol.processing.api)
+
+  // Room
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  implementation(libs.androidx.room.paging)
+  ksp(libs.androidx.room.compiler)
+  annotationProcessor(libs.androidx.room.compiler)
+  testImplementation(libs.androidx.room.testing)
 
   // Hilt Dagger
   implementation(libs.bundles.hilt.dagger)

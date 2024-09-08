@@ -45,6 +45,14 @@ dependencies {
 
   implementation(libs.symbol.processing.api)
 
+  // Room
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  implementation(libs.androidx.room.paging)
+  ksp(libs.androidx.room.compiler)
+  annotationProcessor(libs.androidx.room.compiler)
+  testImplementation(libs.androidx.room.testing)
+
   // Hilt Dagger
   implementation(libs.bundles.hilt.dagger)
   ksp(libs.bundles.hilt.dagger.compiler)
