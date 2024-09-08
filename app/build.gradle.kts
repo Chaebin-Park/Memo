@@ -4,6 +4,11 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.compose.compiler)
+
+  id("com.google.devtools.ksp")
+  id("dagger.hilt.android.plugin")
+  id("kotlin-parcelize")
+  kotlin("plugin.serialization") version "1.7.0"
 }
 
 android {
@@ -69,4 +74,10 @@ dependencies {
   androidTestImplementation(libs.androidx.ui.test.junit4)
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
+
+  implementation(libs.symbol.processing.api)
+
+  // Hilt Dagger
+  implementation(libs.bundles.hilt.dagger)
+  ksp(libs.bundles.hilt.dagger.compiler)
 }
