@@ -58,6 +58,7 @@ android {
 
 dependencies {
   implementation(project(":ui"))
+  implementation(project(":data:memo"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)

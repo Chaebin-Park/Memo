@@ -20,5 +20,5 @@ interface MemoDao {
   suspend fun delete(memo: Memo)
 
   @Query("SELECT * FROM memo")
-  suspend fun memos(): Flow<List<Memo>>
+  fun memos(): Flow<List<Memo>>
 }
