@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cbpark.memo.core.MainContract
 import com.cbpark.memo.entity.Memo
 import com.cbpark.memo.viewmodel.MemoViewModel
@@ -52,25 +53,30 @@ fun MemoPage(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     when (uiState) {
-      MainContract.MemoUiState.Empty -> Text(text = "No memos available")
       is MainContract.MemoUiState.Content -> {
         val memos = (uiState as MainContract.MemoUiState.Content).memos
-        MemoListUi(memos)
+        if (memos.isEmpty()) Text(text = "No memos available")
+        else MemoListUi(memos)
+
+        Button(
+          onClick = {
+//            val randomMemo = Memo(id = 0, title = "New Memo ${(0..100).random()}", content = "Content")
+//            memoViewModel.setEvent(MainContract.MemoUiEvent.AddMemo(randomMemo))
+          },
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text("Add Random Memo")
+        }
+      }
+      is MainContract.MemoUiState.Error -> {
+        Text(text = "Error caused: ${(uiState as MainContract.MemoUiState.Error).message}")
+      }
+      MainContract.MemoUiState.Loading -> {
+        CircularProgressIndicator()
+        memoViewModel.setEvent(MainContract.MemoUiEvent.FetchMemo)
       }
 
-      is MainContract.MemoUiState.Error -> Text(text = "Error caused: ${(uiState as MainContract.MemoUiState.Error).message}")
-      MainContract.MemoUiState.Loading -> CircularProgressIndicator()
-    }
-
-    Button(
-      onClick = {
-        // 임의의 메모 추가 이벤트 전달
-        val randomMemo = Memo(id = 0, title = "New Memo ${(0..100).random()}", content = "Content")
-        memoViewModel.setEvent(MainContract.MemoUiEvent.AddMemo(randomMemo))
-      },
-      modifier = Modifier.fillMaxWidth()
-    ) {
-      Text("Add Random Memo")
+      is MainContract.MemoUiState.Write -> TODO()
     }
   }
 }

@@ -34,7 +34,7 @@ fun MemoUi(
   modifier: Modifier = Modifier
 ) {
   Card (
-    modifier = modifier.padding(Paddings.medium),
+    modifier = modifier.padding(Paddings.medium).fillMaxWidth(),
     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
   ) {
     Box (

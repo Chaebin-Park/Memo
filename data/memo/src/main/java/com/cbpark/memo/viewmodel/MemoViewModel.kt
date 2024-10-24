@@ -13,7 +13,7 @@ import javax.inject.Inject
 class MemoViewModel @Inject constructor(
   private val repository: MemoRepository
 ): BaseViewModel<MainContract.MemoUiEvent, MainContract.MemoUiState, MainContract.MemoUiEffect>() {
-  override fun createInitialState(): MainContract.MemoUiState = MainContract.MemoUiState.Empty
+  override fun createInitialState(): MainContract.MemoUiState = MainContract.MemoUiState.Loading
 
   override fun handelEvent(event: MainContract.MemoUiEvent) {
     when(event) {
@@ -21,6 +21,8 @@ class MemoViewModel @Inject constructor(
       is MainContract.MemoUiEvent.DeleteMemo -> deleteMemo(memo = event.memo)
       MainContract.MemoUiEvent.FetchMemo -> fetchMemos()
       is MainContract.MemoUiEvent.UpdateMemo -> updateMemo(memo = event.memo)
+      is MainContract.MemoUiEvent.ReWrite -> TODO()
+      MainContract.MemoUiEvent.Write -> TODO()
     }
   }
 
@@ -69,13 +71,7 @@ class MemoViewModel @Inject constructor(
         setState { MainContract.MemoUiState.Loading }
 
         repository.memos().collect { memos ->
-          setState {
-            if (memos.isEmpty()) {
-              MainContract.MemoUiState.Empty
-            } else {
-              MainContract.MemoUiState.Content(memos)
-            }
-          }
+          setState { MainContract.MemoUiState.Content(memos) }
         }
       } catch (e: Exception) {
         setState { MainContract.MemoUiState.Error("fetch error: ${e.message}") }
