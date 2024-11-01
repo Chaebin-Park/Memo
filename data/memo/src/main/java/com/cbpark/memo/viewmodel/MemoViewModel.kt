@@ -21,8 +21,20 @@ class MemoViewModel @Inject constructor(
       is MainContract.MemoUiEvent.DeleteMemo -> deleteMemo(memo = event.memo)
       MainContract.MemoUiEvent.FetchMemo -> fetchMemos()
       is MainContract.MemoUiEvent.UpdateMemo -> updateMemo(memo = event.memo)
-      is MainContract.MemoUiEvent.ReWrite -> TODO()
-      MainContract.MemoUiEvent.Write -> TODO()
+      is MainContract.MemoUiEvent.ReWrite -> rewrite(memo = event.memo)
+      MainContract.MemoUiEvent.Write -> write()
+    }
+  }
+
+  private fun rewrite(memo: Memo) {
+    viewModelScope.launch {
+      setState { MainContract.MemoUiState.Write(memo) }
+    }
+  }
+
+  private fun write() {
+    viewModelScope.launch {
+      setState { MainContract.MemoUiState.Write(null) }
     }
   }
 

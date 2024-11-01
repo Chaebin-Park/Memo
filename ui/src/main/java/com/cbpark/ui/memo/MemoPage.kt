@@ -1,5 +1,6 @@
 package com.cbpark.ui.memo
 
+import android.widget.Button
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,17 +56,21 @@ fun MemoPage(
     when (uiState) {
       is MainContract.MemoUiState.Content -> {
         val memos = (uiState as MainContract.MemoUiState.Content).memos
-        if (memos.isEmpty()) Text(text = "No memos available")
-        else MemoListUi(memos)
 
-        Button(
-          onClick = {
+        Column {
+          Button(
+            onClick = {
 //            val randomMemo = Memo(id = 0, title = "New Memo ${(0..100).random()}", content = "Content")
 //            memoViewModel.setEvent(MainContract.MemoUiEvent.AddMemo(randomMemo))
-          },
-          modifier = Modifier.fillMaxWidth()
-        ) {
-          Text("Add Random Memo")
+              memoViewModel.setEvent(MainContract.MemoUiEvent.Write)
+            },
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Text(text = "Add Random Memo")
+          }
+
+          if (memos.isEmpty()) Text(text = "No memos available")
+          else MemoListUi(memos)
         }
       }
       is MainContract.MemoUiState.Error -> {
@@ -76,7 +81,21 @@ fun MemoPage(
         memoViewModel.setEvent(MainContract.MemoUiEvent.FetchMemo)
       }
 
-      is MainContract.MemoUiState.Write -> TODO()
+      is MainContract.MemoUiState.Write -> {
+        Column(
+          modifier = Modifier.fillMaxSize()
+        ) {
+          Text(text = "Text!")
+          Button(
+            onClick = {
+              memoViewModel.setEvent(MainContract.MemoUiEvent.FetchMemo)
+            },
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Text(text = "Cancel")
+          }
+        }
+      }
     }
   }
 }
