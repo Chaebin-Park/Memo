@@ -2,9 +2,8 @@ package com.cbpark.ui.memo
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.cbpark.memo.entity.Memo
 import com.cbpark.ui.theme.Paddings
@@ -12,14 +11,18 @@ import com.cbpark.ui.theme.Paddings
 @Composable
 fun MemoListUi(
   memos: List<Memo>,
-  modifier: Modifier = Modifier
+  firstItem: @Composable () -> Unit,
+  lastItem: @Composable () -> Unit,
+  memoClickEvent: (memo: Memo) -> Unit
 ) {
   LazyColumn (
     contentPadding = PaddingValues(Paddings.medium),
   ) {
-    items(memos) { memo ->
-      MemoUi(memo)
+    item { firstItem() }
+    itemsIndexed(memos) { index, memo ->
+      MemoUi(memo) { memoClickEvent(memo) }
     }
+    item { lastItem() }
   }
 }
 
@@ -48,5 +51,5 @@ private fun MemoListUiPrev() {
     Memo(14, "Title15", "Content1Content1Content1Content1Content1Content1Content1Content1Content1Content1Content1"),
   )
 
-  MemoListUi(memos)
+  MemoListUi(memos = memos, firstItem = {}, lastItem = {}) {}
 }
