@@ -1,8 +1,8 @@
 package com.cbpark.ui.memo
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -18,29 +18,44 @@ import com.cbpark.memo.viewmodel.MemoViewModel
 
 @Composable
 fun WriteMemoPage(
-  modifier: Modifier = Modifier,
   memo: Memo?,
   memoViewModel: MemoViewModel
 ) {
-  var content by remember { mutableStateOf("") }
+  val isRewrite by lazy { if (memo != null) true else false }
+  var title by remember { mutableStateOf(memo?.title) }
+  var content by remember { mutableStateOf(memo?.content) }
 
   Column(
     modifier = Modifier.fillMaxSize()
   ) {
-    Text(text = memo?.content ?: "")
-
     TextField(
-      value = content,
+      value = title?:"",
+      onValueChange = { title = it }
+    )
+    TextField(
+      value = content?:"",
       onValueChange = { content = it }
     )
 
-    Button(
-      onClick = {
-        memoViewModel.setEvent(MainContract.MemoUiEvent.FetchMemo)
-      },
-      modifier = Modifier.fillMaxWidth()
-    ) {
-      Text(text = "Cancel")
+    Row {
+      Button(
+        onClick = {
+          if (isRewrite) {
+            memoViewModel.setEvent(MainContract.MemoUiEvent.UpdateMemo(memo!!.copy(title = title?:"", content = content?:"")))
+          } else {
+            memoViewModel.setEvent(MainContract.MemoUiEvent.AddMemo(Memo(title = title?:"", content = content?:"")))
+          }
+        },
+      ) {
+        Text(text = "Save")
+      }
+      Button(
+        onClick = {
+          memoViewModel.setEvent(MainContract.MemoUiEvent.FetchMemo)
+        },
+      ) {
+        Text(text = "Cancel")
+      }
     }
   }
 }
