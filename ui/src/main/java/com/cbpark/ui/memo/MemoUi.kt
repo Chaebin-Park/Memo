@@ -42,7 +42,7 @@ fun MemoUi(
         Text(
           text = memo.content,
           style = MyTypography.bodyMedium,
-          maxLines = 5,
+          maxLines = 1,
           overflow = TextOverflow.Ellipsis
         )
       }

@@ -42,8 +42,8 @@ fun MemoContentPage(
         Text(text = "Add Memo")
       }
     },
-    lastItem = {}
-  ) { memo ->
-    memoViewModel.setEvent(MainContract.MemoUiEvent.ReWrite(memo = memo))
-  }
+    lastItem = {},
+    memoClickEvent = { memo -> memoViewModel.setEvent(MainContract.MemoUiEvent.ReWrite(memo = memo)) },
+    memoDeleteEvent = { memo -> memoViewModel.setEvent(MainContract.MemoUiEvent.DeleteMemo(memo = memo)) }
+  )
 }
