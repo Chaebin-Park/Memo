@@ -3,6 +3,7 @@ package com.cbpark.ui.card
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.cbpark.ui.theme.Paddings
+import kotlin.math.roundToInt
 
 @Composable
 fun SwipeToRevealCard(
@@ -40,7 +42,10 @@ fun SwipeToRevealCard(
   onDelete: () -> Unit
 ) {
   var offsetX by remember { mutableFloatStateOf(0f) }
-  val animatedOffsetX by animateFloatAsState(targetValue = offsetX, label = "")
+  val revealThreshold = -200f
+  val animatedOffsetX by animateFloatAsState(
+    targetValue = if (offsetX <= revealThreshold) revealThreshold else 0f, label = ""
+  )
 
   Box(
     modifier = Modifier
@@ -60,10 +65,14 @@ fun SwipeToRevealCard(
       contentAlignment = Alignment.CenterEnd
     ) {
       Image(
-        modifier = Modifier.padding(end = 12.dp),
+        modifier = Modifier
+          .padding(end = 12.dp)
+          .clickable {
+            onDelete()
+          },
         imageVector = Icons.Filled.Delete,
         contentDescription = "",
-        colorFilter = ColorFilter.tint(Color.White)
+        colorFilter = ColorFilter.tint(Color.White),
       )
     }
 
@@ -71,26 +80,22 @@ fun SwipeToRevealCard(
     Card(
       modifier = Modifier
         .padding(Paddings.medium)
-        .offset { IntOffset(animatedOffsetX.toInt(), 0) }
+        .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
         .fillMaxSize()
         .pointerInput(Unit) {
           detectHorizontalDragGestures(
             onDragEnd = {
-              if (offsetX < -200f) {
-                onDelete()
-                offsetX = 0f
-              } else {
-                offsetX = 0f
-              }
+              // Snap to the reveal position if swiped far enough, else reset
+              offsetX = if (offsetX <= revealThreshold / 2) revealThreshold else 0f
             }
           ) { _, dragAmount ->
             val newOffset = offsetX + dragAmount
-            offsetX = newOffset.coerceIn(-300f, 0f)
+            offsetX = newOffset.coerceIn(revealThreshold, 0f)
           }
         },
-      onClick = onClick,
       shape = RoundedCornerShape(12.dp),
       elevation = CardDefaults.cardElevation(4.dp),
+      onClick = onClick
     ) {
       cardContent()
     }
